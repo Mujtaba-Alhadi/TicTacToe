@@ -37,11 +37,13 @@ const GameController = (function () {
   ];
 
   const playRound = (index) => {
-    if (isGameOver) return;
-    Gameboard.putMarker(index, currentPlayer.marker);
     const board = Gameboard.getBoard();
 
-    console.log(currentPlayer.name);
+    if (isGameOver) return "Game Over";
+    if (board[index] !== "") return "Spot already taken!";
+
+    Gameboard.putMarker(index, currentPlayer.marker);
+
     console.log(board);
     // Check for a win
     for (let i = 0; i < winConditions.length; i++) {
@@ -49,27 +51,28 @@ const GameController = (function () {
       if (board[a] !== "" && board[a] === board[b] && board[b] === board[c]) {
         console.log(`${currentPlayer.name} wins!`);
         isGameOver = true;
-        return;
+        return `${currentPlayer.name} wins!`;
       }
     }
     // Check for a Tie
-    let isTie = true;
-    for (let i = 0; i < board.length; i++) {
-      if (board[i] === "") {
-        isTie = false;
-        break;
-      }
-    }
-    if (isTie) {
+    if (board.every((cell) => cell !== "")) {
       console.log("It's a Tie!");
       isGameOver = true;
-      return;
+      return "It's a Tie!";
     }
     // Switch Player
     currentPlayer = currentPlayer === playerX ? playerO : playerX;
   };
 
-  return { playRound, currentPlayer };
+  const getCurrentPlayer = () => currentPlayer;
+
+  const resetGame = () => {
+    Gameboard.resetBoard();
+    currentPlayer = playerX;
+    isGameOver = false;
+  };
+
+  return { playRound, getCurrentPlayer, resetGame };
 })();
 
 GameController.playRound(0);
@@ -82,3 +85,5 @@ GameController.playRound(7);
 GameController.playRound(6);
 GameController.playRound(8);
 GameController.playRound(8);
+GameController.resetGame();
+GameController.playRound(0);
