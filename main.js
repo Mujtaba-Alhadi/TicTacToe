@@ -1,11 +1,3 @@
-// store board as array inside Gameboard
-// store players in objects
-// make gameControl object
-// do it in the console first
-// check winning and tie
-// check when the game is over
-let isGameOver = false;
-
 function Player(name, marker) {
   this.name = name;
   this.marker = marker;
@@ -15,7 +7,7 @@ const Gameboard = (function () {
   let board = ["", "", "", "", "", "", "", "", ""];
 
   const putMarker = (index, marker) => {
-    if (board[index] === "" && !isGameOver) {
+    if (board[index] === "") {
       board[index] = marker;
     } else return;
   };
@@ -32,6 +24,7 @@ const GameController = (function () {
   const playerX = new Player("Player X", "X");
   const playerO = new Player("Player O", "O");
   let currentPlayer = playerX;
+  let isGameOver = false;
   const winConditions = [
     [0, 1, 2],
     [3, 4, 5],
@@ -44,8 +37,10 @@ const GameController = (function () {
   ];
 
   const playRound = (index) => {
+    if (isGameOver) return;
     Gameboard.putMarker(index, currentPlayer.marker);
     const board = Gameboard.getBoard();
+
     console.log(currentPlayer.name);
     console.log(board);
     // Check for a win
@@ -53,6 +48,7 @@ const GameController = (function () {
       const [a, b, c] = winConditions[i];
       if (board[a] !== "" && board[a] === board[b] && board[b] === board[c]) {
         console.log(`${currentPlayer.name} wins!`);
+        isGameOver = true;
         return;
       }
     }
@@ -66,6 +62,7 @@ const GameController = (function () {
     }
     if (isTie) {
       console.log("It's a Tie!");
+      isGameOver = true;
       return;
     }
     // Switch Player
@@ -83,4 +80,5 @@ GameController.playRound(3);
 GameController.playRound(5);
 GameController.playRound(7);
 GameController.playRound(6);
+GameController.playRound(8);
 GameController.playRound(8);
