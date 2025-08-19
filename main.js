@@ -75,15 +75,25 @@ const GameController = (function () {
   return { playRound, getCurrentPlayer, resetGame };
 })();
 
-GameController.playRound(0);
-GameController.playRound(1);
-GameController.playRound(2);
-GameController.playRound(4);
-GameController.playRound(3);
-GameController.playRound(5);
-GameController.playRound(7);
-GameController.playRound(6);
-GameController.playRound(8);
-GameController.playRound(8);
-GameController.resetGame();
-GameController.playRound(0);
+// GameController.playRound(0);
+// GameController.playRound(1);
+// GameController.playRound(2);
+// GameController.playRound(4);
+// GameController.playRound(3);
+// GameController.playRound(5);
+// GameController.playRound(7);
+// GameController.playRound(6);
+// GameController.playRound(8);
+// GameController.playRound(8);
+// GameController.resetGame();
+// GameController.playRound(0);
+
+
+// write renderContent function
+// write addMarker function
+// add a display element to show the result
+// put a resart button
+
+const DisplayGame = (function(){
+
+})();
