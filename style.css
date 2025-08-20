@@ -43,4 +43,6 @@ body {
   align-items: center;
   font-size: 72px;
   cursor: pointer;
+  width: 115px;
+  height: 115px;
 }
