@@ -25,6 +25,7 @@ const GameController = (function () {
   const playerO = new Player("Player O", "O");
   let currentPlayer = playerX;
   let isGameOver = false;
+  let winner = null;
   const winConditions = [
     [0, 1, 2],
     [3, 4, 5],
@@ -39,61 +40,73 @@ const GameController = (function () {
   const playRound = (index) => {
     const board = Gameboard.getBoard();
 
-    if (isGameOver) return "Game Over";
-    if (board[index] !== "") return "Spot already taken!";
+    if (isGameOver) return;
+    if (board[index] !== "") return "Spot Already Taken!";
 
     Gameboard.putMarker(index, currentPlayer.marker);
 
-    console.log(board);
+    // console.log(board);
     // Check for a win
     for (let i = 0; i < winConditions.length; i++) {
       const [a, b, c] = winConditions[i];
       if (board[a] !== "" && board[a] === board[b] && board[b] === board[c]) {
-        console.log(`${currentPlayer.name} wins!`);
         isGameOver = true;
-        return `${currentPlayer.name} wins!`;
+        winner = `${currentPlayer.name} Wins!`;
+        return;
       }
     }
     // Check for a Tie
     if (board.every((cell) => cell !== "")) {
-      console.log("It's a Tie!");
       isGameOver = true;
-      return "It's a Tie!";
+      winner = "It's a Tie!";
+      return;
     }
     // Switch Player
     currentPlayer = currentPlayer === playerX ? playerO : playerX;
   };
 
   const getCurrentPlayer = () => currentPlayer;
-
+  const getWinner = () => winner;
   const resetGame = () => {
     Gameboard.resetBoard();
     currentPlayer = playerX;
     isGameOver = false;
+    winner = null;
   };
 
-  return { playRound, getCurrentPlayer, resetGame };
+  return { playRound, getCurrentPlayer, resetGame, getWinner };
 })();
 
-// GameController.playRound(0);
-// GameController.playRound(1);
-// GameController.playRound(2);
-// GameController.playRound(4);
-// GameController.playRound(3);
-// GameController.playRound(5);
-// GameController.playRound(7);
-// GameController.playRound(6);
-// GameController.playRound(8);
-// GameController.playRound(8);
-// GameController.resetGame();
-// GameController.playRound(0);
-
-
-// write renderContent function
-// write addMarker function
-// add a display element to show the result
 // put a resart button
 
-const DisplayGame = (function(){
+const DisplayGame = function () {
+  let board = Gameboard.getBoard();
+  const cells = document.querySelectorAll(".cell");
+  const resetBtn = document.querySelector(".reset");
+  const statusText = document.querySelector(".status");
 
-})();
+  function renderContent() {
+    for (let i = 0; i < board.length; i++) {
+      cells[i].textContent = board[i];
+    }
+  }
+
+  function addMarker() {
+    for (let i = 0; i < cells.length; i++) {
+      cells[i].addEventListener("click", () => {
+        let gameStatus = GameController.playRound(i);
+        if (gameStatus) {
+          statusText.textContent = gameStatus; // "Spot Already Taken" status
+        } else {
+          statusText.textContent = `${GameController.getCurrentPlayer().name} Turn`;
+        }
+        if (GameController.getWinner()) {
+          statusText.textContent = GameController.getWinner();
+        }
+        renderContent();
+      });
+    }
+  }
+  addMarker();
+};
+DisplayGame();
