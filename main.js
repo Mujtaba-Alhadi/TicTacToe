@@ -77,15 +77,13 @@ const GameController = (function () {
   return { playRound, getCurrentPlayer, resetGame, getWinner };
 })();
 
-// put a resart button
-
 const DisplayGame = function () {
-  let board = Gameboard.getBoard();
   const cells = document.querySelectorAll(".cell");
   const resetBtn = document.querySelector(".reset");
   const statusText = document.querySelector(".status");
 
   function renderContent() {
+    const board = Gameboard.getBoard();
     for (let i = 0; i < board.length; i++) {
       cells[i].textContent = board[i];
     }
@@ -95,18 +93,29 @@ const DisplayGame = function () {
     for (let i = 0; i < cells.length; i++) {
       cells[i].addEventListener("click", () => {
         let gameStatus = GameController.playRound(i);
+
         if (gameStatus) {
           statusText.textContent = gameStatus; // "Spot Already Taken" status
-        } else {
-          statusText.textContent = `${GameController.getCurrentPlayer().name} Turn`;
-        }
-        if (GameController.getWinner()) {
+        } else if (GameController.getWinner()) {
           statusText.textContent = GameController.getWinner();
+        } else {
+          statusText.textContent = `${
+            GameController.getCurrentPlayer().name
+          } Turn`;
         }
+
         renderContent();
       });
     }
   }
+
+    resetBtn.addEventListener("click", () => {
+      GameController.resetGame();
+      renderContent();
+      statusText.textContent = `${GameController.getCurrentPlayer().name} Turn`;
+    });
+
   addMarker();
 };
+
 DisplayGame();
